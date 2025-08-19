@@ -20,19 +20,19 @@ cache:
   policy: pull-push
 
 before_script:
-  - echo "🚀 Starting pipeline for $CI_PROJECT_NAME"
-  - echo "📦 Using image: $DOCKER_IMAGE"
-  - echo "🔧 Debug mode: $CI_DEBUG"
+  - echo "Starting pipeline for $CI_PROJECT_NAME"
+  - echo "Using image: $DOCKER_IMAGE"
+  - echo "Debug mode: $CI_DEBUG"
 
 after_script:
-  - echo "✅ Pipeline completed with status: $CI_JOB_STATUS"
-  - echo "🕒 Total time: $CI_JOB_DURATION seconds"
+  - echo "Pipeline completed with status: $CI_JOB_STATUS"
+  - echo "Total time: $CI_JOB_DURATION seconds"
 
 validate-yaml:
   stage: validate
   image: $DOCKER_IMAGE
   script:
-    - echo "🔍 Validating YAML files..."
+    - echo "Validating YAML files..."
     - apk add --no-cache yamllint
     - yamllint . || echo "YAML validation completed"
   tags:
@@ -46,7 +46,7 @@ validate-json:
   stage: validate
   image: $DOCKER_IMAGE
   script:
-    - echo "🔍 Validating JSON files..."
+    - echo "Validating JSON files..."
     - apk add --no-cache jq
     - find . -name "*.json" -exec jq . {} > /dev/null \; || echo "JSON validation completed"
   tags:
@@ -56,8 +56,8 @@ unit-tests:
   stage: test
   image: $DOCKER_IMAGE
   script:
-    - echo "🧪 Running unit tests..."
-    - echo "📊 Generating test report"
+    - echo "Running unit tests..."
+    - echo "Generating test report"
     - mkdir -p test-reports
     - echo '<?xml version="1.0"?><testsuite tests="5" failures="0"></testsuite>' > test-reports/junit.xml
   tags:
@@ -73,10 +73,10 @@ integration-tests:
   stage: test
   image: $DOCKER_IMAGE
   script:
-    - echo "🔗 Running integration tests..."
-    - echo "📡 Testing network connectivity"
+    - echo "Running integration tests..."
+    - echo "Testing network connectivity"
     - ping -c 3 google.com || true
-    - echo "✅ Integration tests passed"
+    - echo "Integration tests passed"
   tags:
     - docker
   needs: ["unit-tests"]
@@ -87,10 +87,10 @@ build-docker:
   services:
     - docker:dind
   script:
-    - echo "🏗️ Building Docker image..."
+    - echo "Building Docker image..."
     - docker --version
-    - echo "📦 Image would be built here"
-    - echo "✅ Build completed"
+    - echo "Image would be built here"
+    - echo "Build completed"
   tags:
     - docker
   only:
@@ -101,7 +101,7 @@ build-artifacts:
   stage: build
   image: $DOCKER_IMAGE
   script:
-    - echo "📦 Creating build artifacts..."
+    - echo "Creating build artifacts..."
     - mkdir -p dist
     - echo "Build version: $CI_COMMIT_SHORT_SHA" > dist/version.txt
     - echo "Build date: $(date)" >> dist/version.txt
@@ -118,8 +118,8 @@ security-scan:
   stage: security
   image: $DOCKER_IMAGE
   script:
-    - echo "🔒 Running security scan..."
-    - echo "📋 Checking for vulnerabilities"
+    - echo "Running security scan..."
+    - echo "Checking for vulnerabilities"
     - apk add --no-cache git
     - echo "Security scan completed - no critical issues found"
   tags:
@@ -130,10 +130,10 @@ deploy-staging:
   stage: deploy
   image: $DOCKER_IMAGE
   script:
-    - echo "🚀 Deploying to $DEPLOY_ENV environment..."
-    - echo "🌐 Registry: $DOCKER_REGISTRY"
-    - echo "📦 Version: $CI_COMMIT_SHORT_SHA"
-    - echo "✅ Deployment to staging successful!"
+    - echo "Deploying to $DEPLOY_ENV environment..."
+    - echo "Registry: $DOCKER_REGISTRY"
+    - echo "Version: $CI_COMMIT_SHORT_SHA"
+    - echo "Deployment to staging successful!"
   tags:
     - docker
   environment:
@@ -146,9 +146,9 @@ deploy-production:
   stage: deploy
   image: $DOCKER_IMAGE
   script:
-    - echo "🎯 Deploying to PRODUCTION..."
-    - echo "⚠️  Production deployment requires manual approval"
-    - echo "✅ Production deployment completed!"
+    - echo "Deploying to PRODUCTION..."
+    - echo "Production deployment requires manual approval"
+    - echo "Production deployment completed!"
   tags:
     - docker
   environment:
@@ -162,10 +162,10 @@ cleanup:
   stage: cleanup
   image: $DOCKER_IMAGE
   script:
-    - echo "🧹 Cleaning up temporary files..."
-    - echo "🗑️  Removing cache files"
+    - echo "Cleaning up temporary files..."
+    - echo "Removing cache files"
     - rm -rf .cache/tmp || true
-    - echo "✅ Cleanup completed"
+    - echo "Cleanup completed"
   tags:
     - docker
   when: always
